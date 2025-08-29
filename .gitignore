@@ -1,4 +1,4 @@
 *.swp
-aitrack/files/aitrack-linux
-opentrack/files/opentrack
-linuxtrack/files/linuxtrack
+images/aitrack/files/aitrack-linux
+images/opentrack/files/opentrack
+images/linuxtrack/files/linuxtrack

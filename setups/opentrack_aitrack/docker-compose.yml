@@ -1,0 +1,73 @@
+version: '3.2'
+
+
+
+
+networks:
+    main:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 100.100.100.0/24
+
+
+
+
+services:
+
+
+
+    aitrack:
+        image: aitrack:v1.0
+        hostname: aitrack
+#       container_name: aitrack
+        privileged: true
+        ipc: host
+        devices:
+            - /dev/dri:/dev/dri
+        group_add:
+            - 'video'
+            - 'render'
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ./config/aitrack/prefs.ini:/home/somebody/prefs.ini
+        environment:
+            - DISPLAY=$DISPLAY
+            - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+            - XDG_RUNTIME_DIR=/tmp
+        networks:
+            main:
+                ipv4_address: 100.100.100.10
+#       entrypoint: "tail -f /dev/null"
+        entrypoint: ["aitrack"]
+
+
+
+
+    opentrack:
+        image: opentrack:v1.0
+        hostname: opentrack
+#       container_name: opentrack
+        devices:
+            - /dev/dri:/dev/dri
+        group_add:
+            - 'video'
+            - 'render'
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - /run/user/$(id -u):/run/user/$(id -u)
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ./config/opentrack/opentrack-2.3:/home/somebody/.config/opentrack-2.3
+            - ./config/opentrack/opentrack-2.3.conf:/home/somebody/.config/opentrack-2.3.conf
+        environment:
+            - DISPLAY=$DISPLAY
+            - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+            - XDG_RUNTIME_DIR=/tmp
+        networks:
+            main:
+                ipv4_address: 100.100.100.11
+#       entrypoint: "tail -f /dev/null"
+        entrypoint: ["opentrack"]
